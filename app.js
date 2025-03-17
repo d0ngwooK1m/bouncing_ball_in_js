@@ -1,13 +1,23 @@
+import { Ball } from './ball.js';
+import { Block } from './block.js';
+
 class App {
     // js canvas project from cmiscm(jongmin kim)
     constructor() {
         this.canvas = document.createElement("canvas");
+        // canvas를 조종 가능하게 해주는 메소드 (canvas 태그에서만 사용 가능)
         this.ctx = this.canvas.getContext("2d");
 
         document.body.appendChild(this.canvas);
 
         window.addEventListener("resize", this.resize.bind(this), false);
         this.resize();
+
+        this.ball = new Ball(this.stageWidth, this.stageHeight, 60, 15);
+        this.block = new Block(700, 30, 300, 450);
+
+        // bind(this) => this를 app class instance로 고정하기 위함
+        window.requestAnimationFrame(this.animate.bind(this));
     }
 
     // 1. stageWidth, stageHeight property를 화면 크기로 지정한다.
@@ -24,8 +34,14 @@ class App {
         this.ctx.scale(2, 2);
     }
 
-    animate(t) {
+    animate(_) {
+        window.requestAnimationFrame(this.animate.bind(this));
 
+        this.ctx.clearRect(0, 0, this.stageWidth, this.stageHeight);
+
+        this.block.draw(this.ctx);
+
+        this.ball.draw(this.ctx, this.stageWidth, this.stageHeight, this.block);
     }
 }
 
